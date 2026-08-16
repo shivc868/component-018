@@ -5,11 +5,7 @@ import { InertiaPlugin } from "gsap/InertiaPlugin";
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
 
-/* ============================================================
-   CONFIG — sab kuch yahin se tune karo
-   ============================================================ */
-
-/* ---- DESKTOP config (default) ---- */
+/* ---- Desktop config (default) ---- */
 const CONFIG_DESKTOP = {
   cardWidth: "clamp(220px, 30vw, 430px)",
   cardAspect: "10 / 7",
@@ -35,7 +31,7 @@ const CONFIG_DESKTOP = {
   introEase: "expo.inOut",
 };
 
-/* ---- MOBILE overrides (< 768px) — sirf jo values alag chahiye wahi yahan likho ---- */
+/* ---- Mobile overrides (< 768px) ---- */
 const CONFIG_MOBILE = {
   cardWidth: "clamp(190px, 64vw, 320px)",
   gap: 190,
@@ -50,16 +46,13 @@ const CONFIG_MOBILE = {
   scaleStep: 0.15,
   visiblePerSide: 2,
   dragUnit: 220,
-  designWidth: 400, // mobile values as-is use hongi (rs = 1)
+  designWidth: 400, // use mobile values as-is (rs = 1)
   minScale: 0.75,
 };
 
-// active config — applyBreakpoint() breakpoint ke hisaab se isme values bharta hai
+// active config, filled by applyBreakpoint()
 const CONFIG = { ...CONFIG_DESKTOP };
 
-/* ============================================================
-   IMAGES
-   ============================================================ */
 const IMAGES = [
   "photo-1519681393784-d120267933ba", // snowy mountain at night
   "photo-1470813740244-df37b8c1edcb", // deep blue starry night
@@ -80,9 +73,6 @@ const IMAGES = [
 const COUNT = IMAGES.length;
 const wrapOffset = gsap.utils.wrap(-COUNT / 2, COUNT / 2);
 
-/* ============================================================
-   DOM
-   ============================================================ */
 const slider = document.createElement("div");
 slider.className = "slider";
 slider.innerHTML = `
@@ -92,8 +82,7 @@ slider.innerHTML = `
 document.body.appendChild(slider);
 
 const stage = slider.querySelector(".slider__stage");
-// perspective stage par — vanishing point exact screen center,
-// isse left/right dono side perfect mirror dikhti hain
+// vanishing point at screen center keeps both sides mirrored
 stage.style.perspectiveOrigin = "50% 50%";
 
 const cards = IMAGES.map((src) => {
@@ -105,14 +94,11 @@ const cards = IMAGES.map((src) => {
   img.draggable = false;
   card.appendChild(img);
   stage.appendChild(card);
-  // card apne center se anchor ho — isse ye hamesha screen ke exact center par baithti hai
+  // anchor each card by its own center
   gsap.set(card, { xPercent: -50, yPercent: -50 });
   return card;
 });
 
-/* ============================================================
-   RESPONSIVE SCALE
-   ============================================================ */
 let rs = 1; // responsive scale factor
 function computeScale() {
   rs = gsap.utils.clamp(
@@ -122,20 +108,18 @@ function computeScale() {
   );
 }
 
-/* ============================================================
-   RENDER — har card ki position uske center-se-doori (d) se nikalti hai
-   ============================================================ */
-let spread = 0; // 0 → 1 intro fan-out ke dauran
+// Each card is placed from its distance (d) to the center slot.
+let spread = 0; // 0 → 1 during the intro fan-out
 
 function render(pos) {
   for (let i = 0; i < COUNT; i++) {
     const off = wrapOffset(i - pos); // -COUNT/2 .. COUNT/2 (0 = center)
     const d = Math.abs(off);
     const side = Math.sign(off); // -1 left, +1 right
-    const t = Math.min(d, 1); // 0 → 1 center slot chhodte waqt
-    const rest = Math.max(d - 1, 0); // pehli side card ke aage ke slots
+    const t = Math.min(d, 1); // 0 → 1 while leaving the center slot
+    const rest = Math.max(d - 1, 0); // slots beyond the first side card
 
-    // side cards ka spacing geometric — bahar jaate jaate compress hota hai
+    // geometric spacing, compressing toward the edges
     const stack =
       CONFIG.step *
       ((1 - Math.pow(CONFIG.stepDecay, rest)) / (1 - CONFIG.stepDecay));
@@ -147,7 +131,7 @@ function render(pos) {
       rotationY: -side * rotation,
       scale:
         CONFIG.centerScale - t * CONFIG.scaleDrop - rest * CONFIG.scaleStep,
-      // dono side ka fade window same — isliye left/right hamesha symmetric
+      // same fade window on both sides keeps left/right symmetric
       opacity: gsap.utils.clamp(
         0,
         1,
@@ -159,9 +143,7 @@ function render(pos) {
   }
 }
 
-/* ============================================================
-   DRAG — sirf pointer/touch, koi scroll nahi
-   ============================================================ */
+/* ---- Drag: pointer/touch only, no scroll ---- */
 const proxy = document.createElement("div");
 let position = 0;
 
@@ -175,7 +157,7 @@ const draggable = Draggable.create(proxy, {
   onRelease: () => slider.classList.remove("is-grabbing"),
   onDrag: update,
   onThrowUpdate: update,
-  // agar kisi wajah se throw na chale to bhi card center par settle ho
+  // settle on center even if the throw tween never runs
   onDragEnd() {
     if (!this.tween || !this.tween.isActive()) {
       const snapped = Math.round(this.x / CONFIG.dragUnit) * CONFIG.dragUnit;
@@ -197,9 +179,7 @@ function update() {
   render(position);
 }
 
-/* ============================================================
-   BREAKPOINT — < 768px par CONFIG_MOBILE ki values apply hoti hain
-   ============================================================ */
+/* ---- Breakpoint: CONFIG_MOBILE applies below 768px ---- */
 const mq = window.matchMedia("(max-width: 767px)");
 
 function applyBreakpoint() {
@@ -213,7 +193,7 @@ function applyBreakpoint() {
     card.style.aspectRatio = CONFIG.cardAspect;
   });
   stage.style.perspective = `${CONFIG.perspective}px`;
-  // dragUnit badla to proxy re-map karo taaki slider jump na kare
+  // re-map the proxy so a changed dragUnit doesn't jump the slider
   gsap.set(proxy, { x: -position * CONFIG.dragUnit });
   draggable.update();
 
@@ -229,9 +209,7 @@ window.addEventListener("resize", () => {
   render(position);
 });
 
-/* ============================================================
-   INTRO
-   ============================================================ */
+/* ---- Intro fan-out ---- */
 gsap.to(
   { value: 0 },
   {

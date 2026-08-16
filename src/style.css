@@ -24,7 +24,7 @@ body {
 .slider {
   position: relative;
   width: 100%;
-  max-width: 1920px; /* slider full width, max 1920px */
+  max-width: 1920px;
   height: 100vh;
   margin: 0 auto;
   display: flex;
@@ -37,7 +37,7 @@ body {
   -webkit-user-select: none;
 }
 
-/* side blend â€” edges background me smoothly merge ho jaate hain */
+/* edge blend into the background */
 .slider::before,
 .slider::after {
   content: "";
@@ -92,7 +92,7 @@ body {
   -webkit-user-drag: none;
 }
 
-/* subtle sheen so the 3D rotation reads on the tilted cards */
+/* sheen so the 3D rotation reads on tilted cards */
 .card::after {
   content: "";
   position: absolute;
