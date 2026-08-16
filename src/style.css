@@ -1,0 +1,114 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Space Grotesk", sans-serif;
+  background: radial-gradient(120% 120% at 50% 0%, #16181f 0%, #0c0d12 55%, #060709 100%);
+  color: #f0f0f0;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  justify-content: center;
+}
+
+.slider {
+  position: relative;
+  width: 100%;
+  max-width: 1920px; /* slider full width, max 1920px */
+  height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* side blend â€” edges background me smoothly merge ho jaate hain */
+.slider::before,
+.slider::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: clamp(80px, 14vw, 280px);
+  z-index: 500;
+  pointer-events: none;
+}
+
+.slider::before {
+  left: 0;
+  background: linear-gradient(to right, #0c0d12 0%, rgba(12, 13, 18, 0) 100%);
+}
+
+.slider::after {
+  right: 0;
+  background: linear-gradient(to left, #0c0d12 0%, rgba(12, 13, 18, 0) 100%);
+}
+
+.slider.is-grabbing {
+  cursor: grabbing;
+}
+
+.slider__stage {
+  position: absolute;
+  inset: 0;
+}
+
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(220px, 30vw, 430px);
+  aspect-ratio: 10 / 7;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #1a1c24;
+  box-shadow:
+    0 40px 80px -24px rgba(0, 0, 0, 0.65),
+    0 12px 28px -12px rgba(0, 0, 0, 0.5);
+  will-change: transform, opacity;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* subtle sheen so the 3D rotation reads on the tilted cards */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 45%);
+  pointer-events: none;
+}
+
+.slider__hint {
+  position: absolute;
+  bottom: 6vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(240, 240, 240, 0.4);
+  pointer-events: none;
+}
