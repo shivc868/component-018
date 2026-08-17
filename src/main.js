@@ -54,18 +54,18 @@ const CONFIG_MOBILE = {
 const CONFIG = { ...CONFIG_DESKTOP };
 
 const IMAGES = [
-  "photo-1519681393784-d120267933ba", // snowy mountain at night
-  "photo-1470813740244-df37b8c1edcb", // deep blue starry night
-  "photo-1500462918059-b1a0cb512f1d", // pink neon umbrella
-  "photo-1464802686167-b939a6910659", // milky way galaxy
-  "photo-1451187580459-43490279c0fa", // earth from space
-  "photo-1475274047050-1d0c0975c63e", // purple night sky
-  "photo-1444703686981-a3abbc4d4fe3", // star field
-  "photo-1502134249126-9f3755a50d78", // deep space nebula
-  "photo-1531306728370-e2ebd9d7bb99", // dark astro night
-  "photo-1462332420958-a05d1e002413", // purple nebula
-  "photo-1446776811953-b23d57bd21aa", // satellite over earth
-  "photo-1506318137071-a8e063b4bec0", // milky way arc
+  "photo-1519681393784-d120267933ba",
+  "photo-1470813740244-df37b8c1edcb",
+  "photo-1500462918059-b1a0cb512f1d",
+  "photo-1464802686167-b939a6910659",
+  "photo-1451187580459-43490279c0fa",
+  "photo-1475274047050-1d0c0975c63e",
+  "photo-1444703686981-a3abbc4d4fe3",
+  "photo-1502134249126-9f3755a50d78",
+  "photo-1531306728370-e2ebd9d7bb99",
+  "photo-1462332420958-a05d1e002413",
+  "photo-1446776811953-b23d57bd21aa",
+  "photo-1506318137071-a8e063b4bec0",
 ].map(
   (id) => `https://images.unsplash.com/${id}?q=80&w=900&auto=format&fit=crop`,
 );

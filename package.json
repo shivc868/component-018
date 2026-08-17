@@ -1,11 +1,11 @@
 {
-  "name": "component-017",
+  "name": "component-018",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node init && vite",
+    "build": "node init && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
